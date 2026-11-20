@@ -88,3 +88,10 @@ async def test_citations_are_asked_for_without_brackets():
     await ask(model, FakeStore(CLAUSES))
     instructions = " ".join(model.calls[0][1]["instructions"].split())
     assert "without the brackets, for example PP-04 §3.2" in instructions
+
+
+async def test_the_model_is_asked_to_cover_every_answering_clause():
+    model = ScriptedChatClient([answers("Yes.", ["PP-04 §3.2"])])
+    await ask(model, FakeStore(CLAUSES))
+    instructions = " ".join(model.calls[0][1]["instructions"].split())
+    assert "Cover every clause that answers the question" in instructions
