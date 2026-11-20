@@ -14,6 +14,7 @@ from policy_agent.domain.access import keep_known
 
 OVERAGE = "Your account is in too many groups to check policy access; ask an administrator."
 NO_POLICY = "No policy you can open covers that."
+MAX_CITATIONS = 12  # AgentReply's cap
 
 
 class PolicyAnswer(BaseModel):
@@ -50,10 +51,14 @@ class FoundryPolicyAnalyst:
             result = None
         if result is None:
             raise AnalystFailed("the model gave no structured answer")
+        citations = keep_known(result.citations, {c.citation for c in clauses})[:MAX_CITATIONS]
+        if result.found_policy and not citations:
+            # An answer citing nothing the caller may read is not grounded in their policies.
+            return AgentReply(answer=NO_POLICY, refusal="no_data")
         return AgentReply(
             answer=result.answer,
             refusal=None if result.found_policy else "no_data",
-            citations=keep_known(result.citations, {clause.citation for clause in clauses}),
+            citations=citations,
         )
 
 

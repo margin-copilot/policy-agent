@@ -102,3 +102,18 @@ async def test_yes_no_rule_questions_get_a_plain_verdict():
     await ask(model, FakeStore(CLAUSES))
     instructions = " ".join(model.calls[0][1]["instructions"].split())
     assert 'say "allowed" or "not allowed" in the first sentence' in instructions
+
+
+async def test_citations_are_capped_at_the_contracts_twelve():
+    clauses = [Clause(f"PP-04 §3.{n}", "Price Change Rules", f"Rule {n}.") for n in range(1, 10)]
+    clauses += [Clause(f"PP-03 §2.{n}", "Promotions", f"Rule {n}.") for n in range(1, 6)]
+    cited = [c.citation for c in clauses]
+    model = ScriptedChatClient([answers("Many rules apply.", cited)])
+    reply = await ask(model, FakeStore(clauses))
+    assert reply.citations == cited[:12]
+
+
+async def test_an_answer_whose_citations_were_all_dropped_is_no_policy():
+    model = ScriptedChatClient([answers("The floor is 20%.", ["PP-06 §1"])])
+    reply = await ask(model, FakeStore(CLAUSES))
+    assert reply == AgentReply(answer="No policy you can open covers that.", refusal="no_data")
