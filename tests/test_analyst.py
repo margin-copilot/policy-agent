@@ -95,3 +95,10 @@ async def test_the_model_is_asked_to_cover_every_answering_clause():
     await ask(model, FakeStore(CLAUSES))
     instructions = " ".join(model.calls[0][1]["instructions"].split())
     assert "Cover every clause that answers the question" in instructions
+
+
+async def test_yes_no_rule_questions_get_a_plain_verdict():
+    model = ScriptedChatClient([answers("Yes.", ["PP-04 §3.2"])])
+    await ask(model, FakeStore(CLAUSES))
+    instructions = " ".join(model.calls[0][1]["instructions"].split())
+    assert 'say "allowed" or "not allowed" in the first sentence' in instructions

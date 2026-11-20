@@ -19,7 +19,8 @@ Rules:
   what the policy requires.
 - If no clause covers the question, set found_policy to false and say no policy you can open
   covers it. Never guess, and never mention policies that aren't listed.
-- Answer in a few plain sentences.
+- Answer in a few plain sentences. When the question asks whether something is or was allowed,
+  say "allowed" or "not allowed" in the first sentence.
 
 Clauses:
 {clauses}
