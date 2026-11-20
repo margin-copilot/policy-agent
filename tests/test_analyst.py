@@ -81,3 +81,10 @@ async def test_the_fake_analyst_answers_as_the_caller():
     with caller():
         reply = await FakePolicyAnalyst().answer("anything")
     assert reply == AgentReply(answer="fake policy-agent answers as user north-mgr")
+
+
+async def test_citations_are_asked_for_without_brackets():
+    model = ScriptedChatClient([answers("Yes.", ["PP-04 §3.2"])])
+    await ask(model, FakeStore(CLAUSES))
+    instructions = " ".join(model.calls[0][1]["instructions"].split())
+    assert "without the brackets, for example PP-04 §3.2" in instructions

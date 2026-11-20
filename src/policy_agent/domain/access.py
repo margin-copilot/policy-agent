@@ -11,4 +11,5 @@ def group_filter(group_ids: frozenset[str]) -> str:
 
 
 def keep_known(citations: list[str], known: set[str]) -> list[str]:
-    return list(dict.fromkeys(citation for citation in citations if citation in known))
+    cleaned = (citation.strip().strip("[]").strip() for citation in citations)
+    return list(dict.fromkeys(citation for citation in cleaned if citation in known))

@@ -21,3 +21,8 @@ def test_non_guid_group_ids_are_rejected(bad):
 def test_unknown_or_repeated_citations_are_dropped():
     cited = ["PP-04 §3.2", "PP-06 §1", "PP-04 §3.2", "PP-02 §2"]
     assert keep_known(cited, {"PP-04 §3.2", "PP-02 §2"}) == ["PP-04 §3.2", "PP-02 §2"]
+
+
+def test_citations_are_compared_without_brackets_or_stray_spaces():
+    cited = ["[PP-04 §3.2]", " PP-02 §2 ", "[PP-06 §1]"]
+    assert keep_known(cited, {"PP-04 §3.2", "PP-02 §2"}) == ["PP-04 §3.2", "PP-02 §2"]
