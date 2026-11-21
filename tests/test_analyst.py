@@ -117,3 +117,13 @@ async def test_an_answer_whose_citations_were_all_dropped_is_no_policy():
     model = ScriptedChatClient([answers("The floor is 20%.", ["PP-06 §1"])])
     reply = await ask(model, FakeStore(CLAUSES))
     assert reply == AgentReply(answer="No policy you can open covers that.", refusal="no_data")
+
+
+async def test_an_allowed_verdict_comes_with_its_conditions():
+    model = ScriptedChatClient([answers("Allowed.", ["PP-04 §3.2"])])
+    await ask(model, FakeStore(CLAUSES))
+    instructions = " ".join(model.calls[0][1]["instructions"].split())
+    assert (
+        "then give every condition the clauses attach to it (limits, approvals, how often it may "
+        "happen, waiting periods), each with its citation" in instructions
+    )
