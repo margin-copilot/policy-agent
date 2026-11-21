@@ -101,7 +101,7 @@ async def test_yes_no_rule_questions_get_a_plain_verdict():
     model = ScriptedChatClient([answers("Yes.", ["PP-04 §3.2"])])
     await ask(model, FakeStore(CLAUSES))
     instructions = " ".join(model.calls[0][1]["instructions"].split())
-    assert 'say "allowed" or "not allowed" in the first sentence' in instructions
+    assert '"Yes, … is allowed." or "No, … is not allowed."' in instructions
 
 
 async def test_citations_are_capped_at_the_contracts_twelve():
@@ -124,6 +124,15 @@ async def test_an_allowed_verdict_comes_with_its_conditions():
     await ask(model, FakeStore(CLAUSES))
     instructions = " ".join(model.calls[0][1]["instructions"].split())
     assert (
-        "then give every condition the clauses attach to it (limits, approvals, how often it may "
+        "Then give every condition the clauses attach to it (limits, approvals, how often it may "
         "happen, waiting periods), each with its citation" in instructions
+    )
+
+
+async def test_a_verdict_opens_with_a_full_yes_or_no_sentence():
+    model = ScriptedChatClient([answers("Yes, this is allowed.", ["PP-04 §3.2"])])
+    await ask(model, FakeStore(CLAUSES))
+    instructions = " ".join(model.calls[0][1]["instructions"].split())
+    assert (
+        'open with a full sentence: "Yes, … is allowed." or "No, … is not allowed."' in instructions
     )
