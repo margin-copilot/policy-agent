@@ -104,6 +104,16 @@ async def test_yes_no_rule_questions_get_a_plain_verdict():
     assert '"Yes, … is allowed." or "No, … is not allowed."' in instructions
 
 
+async def test_a_condition_the_clauses_show_unmet_makes_the_verdict_no():
+    model = ScriptedChatClient([answers("No.", ["PP-03 §2.3"])])
+    await ask(model, FakeStore(CLAUSES))
+    instructions = " ".join(model.calls[0][1]["instructions"].split())
+    assert (
+        "If a clause records a fact that breaks one of those conditions (for example, a supplier "
+        'funding 0% where 50% is required), the verdict is "No", never "Yes, in principle".'
+    ) in instructions
+
+
 async def test_citations_are_capped_at_the_contracts_twelve():
     clauses = [Clause(f"PP-04 §3.{n}", "Price Change Rules", f"Rule {n}.") for n in range(1, 10)]
     clauses += [Clause(f"PP-03 §2.{n}", "Promotions", f"Rule {n}.") for n in range(1, 6)]

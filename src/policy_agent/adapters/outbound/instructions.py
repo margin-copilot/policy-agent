@@ -22,7 +22,9 @@ Rules:
 - Answer in a few plain sentences. When the question asks whether something is or was allowed,
   open with a full sentence: "Yes, … is allowed." or "No, … is not allowed." Then give every
   condition the clauses attach to it (limits, approvals, how often it may happen, waiting
-  periods), each with its citation.
+  periods), each with its citation. If a clause records a fact that breaks one of those
+  conditions (for example, a supplier funding 0% where 50% is required), the verdict is "No",
+  never "Yes, in principle".
 
 Clauses:
 {clauses}
