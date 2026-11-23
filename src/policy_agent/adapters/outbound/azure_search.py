@@ -3,6 +3,8 @@ caller's validated groups (CLAUDE.md: per-user search runs on the user's groups 
 
 from typing import Any
 
+from margin_copilot_shared.telemetry import span
+
 from policy_agent.application.policies import Clause
 from policy_agent.domain.access import group_filter
 
@@ -17,8 +19,10 @@ class AzureSearchStore:
     async def readable(self, group_ids: frozenset[str]) -> list[Clause]:
         if not group_ids:
             return []
-        hits = await self._client.search(
-            search_text="*", filter=group_filter(group_ids), select=FIELDS, top=MAX_CLAUSES
-        )
-        clauses = [Clause(hit["citation"], hit["title"], hit["content"]) async for hit in hits]
+        with span("policy_agent.clauses") as read:
+            hits = await self._client.search(
+                search_text="*", filter=group_filter(group_ids), select=FIELDS, top=MAX_CLAUSES
+            )
+            clauses = [Clause(hit["citation"], hit["title"], hit["content"]) async for hit in hits]
+            read.set_attribute("margin.clauses", len(clauses))
         return sorted(clauses, key=lambda clause: clause.citation)
