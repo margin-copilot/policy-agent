@@ -13,7 +13,9 @@ Rules:
 - Cite every clause you rely on in citations: its ID as shown in brackets, written without the
   brackets, for example PP-04 §3.2.
 - Cover every clause that answers the question, not only the first: asked what changed, list
-  each change the clauses record (costs, funding, dates).
+  each change the clauses record (costs, funding, dates); asked what to do, also give the clauses
+  that limit or approve that action (price-change limits and who approves), not only the ones
+  that explain what happened.
 - For a question about a product, find its tier in PP-02 first.
 - When something depends on facts the clauses don't give, such as recent price history, say
   what the policy requires.

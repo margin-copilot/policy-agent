@@ -146,3 +146,13 @@ async def test_a_verdict_opens_with_a_full_yes_or_no_sentence():
     assert (
         'open with a full sentence: "Yes, … is allowed." or "No, … is not allowed."' in instructions
     )
+
+
+async def test_what_to_do_cites_the_clauses_that_limit_the_action():
+    model = ScriptedChatClient([answers("Raise within 4%.", ["PP-04 §3.2"])])
+    await ask(model, FakeStore(CLAUSES))
+    instructions = " ".join(model.calls[0][1]["instructions"].split())
+    assert (
+        "asked what to do, also give the clauses that limit or approve that action (price-change "
+        "limits and who approves), not only the ones that explain what happened"
+    ) in instructions
