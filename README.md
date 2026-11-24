@@ -13,7 +13,7 @@ Part of **Margin Copilot**, a secure multi-agent pricing assistant on Azure, bui
 - The reply is one data part in the shared `AgentReply` contract: `{"answer": "...", "refusal": null, "citations": ["PP-04 §3.2"]}`. A failure is a JSON-RPC error with the fixed message `policy-agent failed`.
 - Skill `policies`:
   - The service reads every clause the caller's groups may read from AI Search: `group_ids/any(...)` on the validated token's groups, and never test fixtures. Group IDs must be GUIDs before they reach the filter.
-  - gpt-5-mini (Microsoft Foundry, reasoning effort low, D-044) answers from those clauses only.
+  - gpt-5-mini (Microsoft Foundry, reasoning effort medium; low missed clauses in the gate, D-044) answers from those clauses only.
   - Code keeps only citations of clauses it handed the model, and sets the refusal: `no_data` when no clause covers the question, `no_access` when the token's group list overflowed (fail closed).
 
 ## Configuration
