@@ -42,7 +42,7 @@ class FoundryPolicyAnalyst:
         agent = Agent(
             client=self._client,
             instructions=instructions(clauses),
-            default_options={"response_format": PolicyAnswer, "reasoning": {"effort": "medium"}},
+            default_options={"response_format": PolicyAnswer, "reasoning": {"effort": "low"}},
         )
         response = await agent.run(question)
         try:

@@ -71,10 +71,10 @@ async def test_group_overage_is_no_access_without_a_model_call():
     assert model.calls == [] and store.asked == []
 
 
-async def test_reasoning_effort_is_medium():
+async def test_reasoning_effort_is_low():
     model = ScriptedChatClient([answers("Yes.", ["PP-04 §3.2"])])
     await ask(model, FakeStore(CLAUSES))
-    assert model.calls[0][1]["reasoning"] == {"effort": "medium"}
+    assert model.calls[0][1]["reasoning"] == {"effort": "low"}
 
 
 async def test_the_fake_analyst_answers_as_the_caller():
